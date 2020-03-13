@@ -59,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 .setContentText("ContentText")
                 .setPriority(PRIORITY_DEFAULT)
                 // set the intent that will fire when the user taps the notification
-                .addAction(R.drawable.ic_launcher_background, "test", pendingIntent)
+                .addAction(R.drawable.dismiss, "DISMISS", pendingIntent)
+                .addAction(R.drawable.answer, "ANSWER", pendingIntent)
                 .setAutoCancel(true);
 
         // show the notification
