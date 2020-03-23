@@ -3,6 +3,7 @@ package com.layon.android.testnotification;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 public class IncommingCall extends AppCompatActivity {
 
@@ -10,5 +11,6 @@ public class IncommingCall extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incomming_call);
+        Log.i("layonf", "abriiii poraaa");
     }
 }
