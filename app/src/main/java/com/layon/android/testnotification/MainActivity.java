@@ -7,7 +7,10 @@ import androidx.core.app.NotificationManagerCompat;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -16,13 +19,30 @@ import static androidx.core.app.NotificationCompat.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static String Channel_ID = "TestNotification";
-    private final static int Notification_ID = 1236;
+    private final static String Channel_ID = "TestNotification2";
+    private final static int Notification_ID = 1241;
+
+    BroadcastReceiver broadcastReceiver = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if(action.equals("android.os.action.POWER_SAVE_MODE_CHANGED")) {
+                    postNotification();
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.os.action.POWER_SAVE_MODE_CHANGED");
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
 
@@ -35,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(Channel_ID, name, importance);
             channel.setDescription(description);
+            channel.enableVibration(false);
+            //channel.enableLights(true);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
@@ -43,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void notify(View view) {
+        postNotification();
+    }
 
+    public void postNotification(){
         // create a channel
         createNotificationChannel();
 
@@ -57,14 +82,17 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle("Title")
                 .setContentText("ContentText")
-                .setPriority(PRIORITY_DEFAULT)
+                .setPriority(PRIORITY_DEFAULT);
                 // set the intent that will fire when the user taps the notification
                 //.addAction(R.drawable.dismiss, "DISMISS", pendingIntent)
                 //.addAction(R.drawable.answer, "ANSWER", pendingIntent)
-                .setAutoCancel(true);
+                //.setContentIntent(pendingIntent)
+                //.setOnlyAlertOnce(true)
+                //.setAutoCancel(true);
 
         // show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(Notification_ID, builder.build());
     }
 }
+
